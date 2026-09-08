@@ -18263,6 +18263,12 @@
             ],
             "title": "Description"
           },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metadata",
+            "description": "Arbitrary JSON metadata for the prompt version."
+          },
           "model_provider": {
             "$ref": "#/components/schemas/ModelProvider"
           },
@@ -18424,6 +18430,12 @@
               }
             ],
             "title": "Description"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Metadata",
+            "description": "Arbitrary JSON metadata for the prompt version."
           },
           "model_provider": {
             "$ref": "#/components/schemas/ModelProvider"
