@@ -77,21 +77,31 @@ jobs:
         working-directory: ./js
         run: pnpm install --frozen-lockfile
       - name: Get installed Playwright version
-        id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(pnpm list --json | jq -r '.[0].devDependencies["@playwright/test"].version')" >> $GITHUB_ENV
-      - name: Cache Playwright binaries
+        # Assign on its own line so the step fails when the lookup does. Inside
+        # `echo "VAR=$(...)"` only echo's status is checked, so a substitution
+        # that errors -- or that succeeds while printing a useless value -- is
+        # still written to the key and still passes. `node -p` throws when the
+        # package is unresolvable rather than printing a placeholder.
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('@playwright/test/package.json').version")
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> "$GITHUB_ENV"
+      - name: Cache Playwright browsers
+        # Each Playwright release pins exact browser revisions, so the version
+        # identifies the contents. restore-keys lets a bump start from the
+        # previous tarball and download only the revisions that changed.
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-${{ hashFiles('js/app/playwright.config.ts') }}
-      - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --with-deps
-      - name: Install system dependencies for WebKit
-        # WebKit dependencies can't be cached and must always be installed.
-        if: ${{ env.CI_PLAYWRIGHT_SKIP_WEBKIT != 'true' && steps.playwright-cache.outputs.cache-hit == 'true' }}
-        run: pnpm exec playwright install-deps webkit
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          restore-keys: ${{ runner.os }}-playwright-
+      - name: Install Playwright browsers
+        # Unconditional, so the cache stays a speed optimization rather than a
+        # source of truth: install downloads only missing revisions, and a
+        # stale or absent entry costs download time instead of leaving the job
+        # with no browser to launch. It also garbage-collects revisions that no
+        # live installation references. --only-shell skips the full Chrome for
+        # Testing build; this suite launches the chromium headless shell.
+        run: pnpm exec playwright install --with-deps --only-shell
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ matrix.py }}
