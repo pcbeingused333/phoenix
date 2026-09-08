@@ -1,5 +1,12 @@
 # Changelog
 
+## [20.10.0](https://github.com/Arize-ai/phoenix/compare/arize-phoenix-v20.9.0...arize-phoenix-v20.10.0) (2026-09-08)
+
+
+### Features
+
+* **ui:** show cache read/write in cumulative token count tooltips ([#15838](https://github.com/Arize-ai/phoenix/issues/15838)) ([9a2074a](https://github.com/Arize-ai/phoenix/commit/9a2074a03826d093648b9c680f81bf0d320871a6))
+
 ## [20.9.0](https://github.com/Arize-ai/phoenix/compare/arize-phoenix-v20.8.0...arize-phoenix-v20.9.0) (2026-09-08)
 
 
