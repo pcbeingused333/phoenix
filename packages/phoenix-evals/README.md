@@ -67,7 +67,7 @@ The `phoenix.evals.metrics` module provides ready-to-use evaluators for common t
 | Faithfulness | `FaithfulnessEvaluator` | Detects hallucinations — checks if output is grounded in context |
 | Conciseness | `ConcisenessEvaluator` | Evaluates whether the response is appropriately concise |
 | Correctness | `CorrectnessEvaluator` | Checks if the output is factually correct |
-| Document Relevance | `DocumentRelevanceEvaluator` | Measures how relevant a retrieved document is to a query |
+| Retrieval Relevance | `RetrievalRelevanceEvaluator` | Measures how relevant retrieved information is to a request |
 | Refusal | `RefusalEvaluator` | Detects whether the model refused to answer |
 | Tool Invocation | `ToolInvocationEvaluator` | Checks whether the correct tool was called with the right arguments |
 | Tool Selection | `ToolSelectionEvaluator` | Evaluates whether the right tool was selected for the task |
@@ -77,6 +77,11 @@ The `phoenix.evals.metrics` module provides ready-to-use evaluators for common t
 | Exact Match | `exact_match` | Checks for exact string equality between output and expected |
 | Regex Match | `MatchesRegex` | Checks whether the output matches a regular expression |
 | Precision/Recall | `PrecisionRecallFScore` | Computes precision, recall, and F-score for classification tasks |
+
+`DocumentRelevanceEvaluator` is deprecated and will be removed in
+`arize-phoenix-evals` 4.0.0. Use `RetrievalRelevanceEvaluator` instead. Rename the
+`document_text` input field to `context` and the `unrelated` label to
+`irrelevant`. For per-document evaluation, pass one document as `context`.
 
 ```python
 from phoenix.evals.llm import LLM
